@@ -10,10 +10,10 @@ Welcome to **Computational Design and Fabrication**, a platform dedicated to beg
 
 Title | Description | Slides | Session material | Assignment 
 ----- | ----------- | ------ | ---------------- | ----------
-**01 Python Basics** | Quick start on Python | [Python Basics](https://docs.google.com/presentation/d/1itrUdpCxscddm8ilBpDHMNRPB9uUaK41vLhZXXznRcU/edit?usp=sharing) | [Session 01](https://github.com/computationaldesignandfabrication/cdf1-session-01) |[Assignment 01](https://github.com/computationaldesignandfabrication/cdf1-assignment-01)
-**02 Basic Geometry 2D** | 2D geometry  | [Geometry 2D](https://docs.google.com/presentation/d/1t5Old_fkJYUoT19DOXw5mV__aK2kXLFIzcbFNjCk49I/edit?usp=sharing) | [Session 02](https://github.com/computationaldesignandfabrication/cdf1-session-02) | [Assignment 02](https://github.com/computationaldesignandfabrication/cdf1-assignment-02)
-**03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](https://docs.google.com/presentation/d/1BRTuzIq9qnQWI6xbl-DzDe6EcIYqgHcdwXjCbWrDimM/edit?usp=sharing) | [Session 03](https://github.com/computationaldesignandfabrication/cdf1-session-03) | [Assignment 03](https://github.com/computationaldesignandfabrication/cdf1-assignment-03)
-**04 Advanced Geometry** | Meshes and mesh operations | [Meshes](https://docs.google.com/presentation/d/157haw_1_zLma1QmPeS_Vz5kyLTYuytL1gbhSn71Se1M/edit?usp=sharing) |  [Session 04](https://github.com/computationaldesignandfabrication/cdf1-session-04) | [Assignment 04](https://github.com/computationaldesignandfabrication/cdf1-assignment-04)
+**01 Python Basics** | Quick start on Python | [Python Basics](LINK) | [Session 01](LINK) |[Assignment 01](LINK)
+**02 Basic Geometry 2D** | 2D geometry  | [Geometry 2D](LINK) | [Session 02](LINK) | [Assignment 02](LINK)
+**03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](LINK) | [Session 03](LINK) | [Assignment 03](LINK)
+**04 Advanced Geometry** | Meshes and mesh operations | [Meshes](LINK) |  [Session 04](LINK) | [Assignment 04](LINK)
 
 
 ## Session Blocks 
