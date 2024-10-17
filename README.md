@@ -38,6 +38,7 @@ Title | Description | Slides | Session material | Assignment
 
 ## Dependencies
 
+## Getting Started
 
 ### Cloning the CDF Repository
 
