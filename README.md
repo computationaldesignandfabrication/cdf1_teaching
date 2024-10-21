@@ -23,7 +23,7 @@ Title | Description | Slides | Session material | Assignment
 ----- | ----------- | ------ | ---------------- | ----------
 **05 Design and Fabrication Method** | Introduction to the Fabrication Method and the Design Tool | 
 **06 Structural Form Finding** | Geometric form finding for compression-only structures | 
-**07 Shape Segmentationg** | Segmentation and connection detailing |  
+**07 Shape Segmentation** | Segmentation and connection detailing |  
 **08 Slicing** | Slicing and Print Path generation | 
 
 
