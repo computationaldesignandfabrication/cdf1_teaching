@@ -21,11 +21,10 @@ Title | Description | Slides | Session material | Assignment
 
 Title | Description | Slides | Session material | Assignment 
 ----- | ----------- | ------ | ---------------- | ----------
-**05 Earth 3D Printing Demo** | Earth 3D Printing Demo | [Earth 3D Printing Demo](LINK) | No assignment
-**06 Surface Form Finding** | Geometric form finding for compression-only structures | [Form Finding](LINK) | 
-**07 Volume Form Finding** | Geometric form finding for compression-only structures | [Form Finding](LINK) | 
-**08 Shape Segmentation** | Segmentation and connection detailing | [Form Finding](LINK) | 
-**09 Slicing and Print Path Generation** | Slicing and Print Path generation | [Slicing and Print Path Generation](LINK) | 
+**05 Design and Fabrication Method** | Introduction to the Fabrication Method and the Design Tool | 
+**06 Structural Form Finding** | Geometric form finding for compression-only structures | 
+**07 Shape Segmentationg** | Segmentation and connection detailing |  
+**08 Slicing** | Slicing and Print Path generation | 
 
 
 ## Requirements
