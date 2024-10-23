@@ -16,7 +16,7 @@ Nov 7  | **02 Basic Geometry 2D** | 2D geometry  | [Geometry 2D](LINK) | [Sessio
 Nov 14  | **Feedback Session** |  | |  |
 Nov 21 | **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](LINK) | [Session 03](LINK) | [Assignment 03](LINK)
 Nov 28 | **Feedback Session** |   |  | | 
-Dec 19 | **04 Advanced Geometry** | Meshes and mesh operations | [Meshes](LINK) |  [Session 04](LINK) | [Assignment 04](LINK)
+Dec 12 | **04 Advanced Geometry** | Meshes and mesh operations | [Meshes](LINK) |  [Session 04](LINK) | [Assignment 04](LINK)
 Dec 19 | **Feedback Session*** |  |  | | 
 
 
@@ -26,12 +26,12 @@ Dec 19 | **Feedback Session*** |  |  | |
 
 Date | Title | Description | Slides | Session material | Assignment 
 ---- | ----- | ----------- | ------ | ---------------- | ----------
-Jan 9 | **05 Design and Fabrication Method** | Introduction to the fabrication method and the design tool | 
-Jan 16 | **06 Structural Form Finding** | Geometric form finding for compression-only structures | 
-Jan 16 | **07 Shape Segmentation** | Segmentation and connection detailing |  
-Jan 23 | **Concept Presentation and Feedback Session** |  |  
-Jan 30 | **08 Slicing** | Slicing and print path generation | 
-Feb 6 | **Final Design Presentation** |  | 
+Jan 9 | **05 Design and Fabrication Method** | Introduction to the fabrication method and the design tool | Design Fabrication Method | Session 05
+Jan 16 | **06 Structural Form Finding** | Geometric form finding for compression-only structures | Form Finding | Session 06 | 
+Jan 16 | **07 Shape Segmentation** | Segmentation and connection detailing |  Segmentation | Session 07 |
+Jan 23 | **Concept Presentation and Feedback Session** |  |  |  | Assignment 05
+Jan 30 | **08 Slicing** | Slicing and print path generation | Slicing | Session 08 | 
+Feb 6 | **Final Design Presentation** |  |  |  |  Assignment 06
 
 
 ## Requirements
