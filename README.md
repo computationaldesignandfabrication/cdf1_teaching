@@ -10,14 +10,14 @@ Welcome to **Computational Design and Fabrication**, a platform dedicated to beg
 
 Date | Title | Description | Slides | Session material | Assignment 
 ---- | ----- | ----------- | ------ | ---------------- | ----------
-Oct 24 | **01 Python Basics** | Quick start on Python | [Python Basics](LINK) | [Session 01](LINK) |[Assignment 01](LINK)
-Oct 31  | **Feedback Session** |   |  | | 
-Nov 7  | **02 Basic Geometry 2D** | 2D geometry  | [Geometry 2D](LINK) | [Session 02](LINK) | [Assignment 02](LINK)
+Oct 24 | **01 Python Basics** | Quick start on Python | [Python Basics](https://docs.google.com/presentation/d/1itrUdpCxscddm8ilBpDHMNRPB9uUaK41vLhZXXznRcU/edit#slide=id.g2cad153b9c9_0_202) | [Session 01](LINK) |[Assignment 01](LINK)
+Oct 31  | **Feedback Session** |   |  |  | 
+Nov 7  | **02 Basic Geometry 2D** | 2D geometry  | [Geometry 2D](https://docs.google.com/presentation/d/1t5Old_fkJYUoT19DOXw5mV__aK2kXLFIzcbFNjCk49I/edit#slide=id.g2cad153b9c9_0_202)(LINK) | [Session 02](LINK) | [Assignment 02](LINK)
 Nov 14  | **Feedback Session** |  | |  |
 Nov 21 | **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](LINK) | [Session 03](LINK) | [Assignment 03](LINK)
-Nov 28 | **Feedback Session** |   |  | | 
+Nov 28 | **Feedback Session** |   |  |  | 
 Dec 12 | **04 Advanced Geometry** | Meshes and mesh operations | [Meshes](LINK) |  [Session 04](LINK) | [Assignment 04](LINK)
-Dec 19 | **Feedback Session** |  |  | | 
+Dec 19 | **Feedback Session** |  |  |  | 
 
 
 
