@@ -17,7 +17,7 @@ Nov 14  | **Feedback Session** |  | |  |
 Nov 21 | **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](LINK) | [Session 03](LINK) | [Assignment 03](LINK)
 Nov 28 | **Feedback Session** |   |  | | 
 Dec 12 | **04 Advanced Geometry** | Meshes and mesh operations | [Meshes](LINK) |  [Session 04](LINK) | [Assignment 04](LINK)
-Dec 19 | **Feedback Session*** |  |  | | 
+Dec 19 | **Feedback Session** |  |  | | 
 
 
 
