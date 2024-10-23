@@ -26,7 +26,7 @@ Dec 19 | **Feedback Session*** |  |  | |
 
 Date | Title | Description | Slides | Session material | Assignment 
 ---- | ----- | ----------- | ------ | ---------------- | ----------
-Jan 9 | **05 Design and Fabrication Method** | Introduction to the fabrication method and the design tool | Design Fabrication Method | Session 05
+Jan 9 | **05 Design and Fabrication Method** | Introduction to the fabrication method and the design tool | Design and Fabrication Method | Session 05
 Jan 16 | **06 Structural Form Finding** | Geometric form finding for compression-only structures | Form Finding | Session 06 | 
 Jan 16 | **07 Shape Segmentation** | Segmentation and connection detailing |  Segmentation | Session 07 |
 Jan 23 | **Concept Presentation and Feedback Session** |  |  |  | Assignment 05
