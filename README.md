@@ -14,7 +14,7 @@ Oct 24 | **01 Python Basics** | Quick start on Python | [Python Basics](https://
 Oct 31  | **Feedback Session** |   |  |  | 
 Nov 7  | **02 Basic Geometry 2D** | 2D geometry  | [Geometry 2D](https://docs.google.com/presentation/d/1t5Old_fkJYUoT19DOXw5mV__aK2kXLFIzcbFNjCk49I/edit#slide=id.g2cad153b9c9_0_202) | [Session 02](https://classroom.github.com/a/tBISN_ul) | [Assignment 02](https://classroom.github.com/a/FkT2TYiD)
 Nov 14  | **Feedback Session** |  | |  |
-Nov 21 | **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](LINK) | [Session 03](LINK) | [Assignment 03](LINK)
+Nov 21 | **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](https://docs.google.com/presentation/d/1BRTuzIq9qnQWI6xbl-DzDe6EcIYqgHcdwXjCbWrDimM/edit?usp=sharing) | [Session 03](https://classroom.github.com/a/331M5qJj) | [Assignment 03](https://classroom.github.com/a/piywCTG7)
 Nov 28 | **Feedback Session** |   |  |  | 
 Dec 12 | **04 Advanced Geometry** | Meshes and mesh operations | [Meshes](LINK) |  [Session 04](LINK) | [Assignment 04](LINK)
 Dec 19 | **Feedback Session** |  |  |  | 
