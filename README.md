@@ -16,7 +16,7 @@ Nov 7  | **02 Basic Geometry 2D** | 2D geometry  | [Geometry 2D](https://docs.go
 Nov 14  | **Feedback Session** |  | |  |
 Nov 21 | **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](https://docs.google.com/presentation/d/1BRTuzIq9qnQWI6xbl-DzDe6EcIYqgHcdwXjCbWrDimM/edit?usp=sharing) | [Session 03](https://classroom.github.com/a/331M5qJj) | [Assignment 03](https://classroom.github.com/a/piywCTG7)
 Nov 28 | **Feedback Session** |   |  |  | 
-Dec 12 | **04 Advanced Geometry** | Meshes and mesh operations | [Meshes](https://docs.google.com/presentation/d/157haw_1_zLma1QmPeS_Vz5kyLTYuytL1gbhSn71Se1M/edit?usp=sharing) |  [Session 04](https://classroom.github.com/a/rlZ0hTCT) | [Assignment 04](LINK)
+Dec 12 | **04 Advanced Geometry** | Meshes and mesh operations | [Meshes](https://docs.google.com/presentation/d/157haw_1_zLma1QmPeS_Vz5kyLTYuytL1gbhSn71Se1M/edit?usp=sharing) |  [Session 04](https://classroom.github.com/a/rlZ0hTCT) | [Assignment 04](https://classroom.github.com/a/5xxbA7C7)
 Dec 19 | **Feedback Session** |  |  |  | 
 
 
