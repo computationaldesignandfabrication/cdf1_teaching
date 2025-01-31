@@ -27,9 +27,9 @@ Dec 19 | **Feedback Session** |  |  |  |
 Date | Title | Description | Slides | Session material | Assignment 
 ----- | ----- | ----------- | ------ | ---------------- | ----------
 Jan 9 | **05 Design and Fabrication Method** | Introduction to the fabrication method and the design tool | [Design and Fabrication Method](https://drive.google.com/file/d/1yK-T4iufbx-VxYYf5qZQG7MmJBaDMpVT/view?usp=sharing) | [Session 05](https://github.com/computationaldesignandfabrication/cdf1_teaching/tree/main/rhino)
-Jan 16 | **06 Structural Form Finding** | Geometric form finding for compression-only structures | Form Finding | [Session 06](https://github.com/computationaldesignandfabrication/cdf1_teaching/tree/main/rhino) | 
+Jan 16 | **06 Structural Form Finding** | Geometric form finding for compression-only structures | [Structural Form Finding](https://drive.google.com/file/d/19xErZSPS4Se-H8X03lP_uzua46J34XxS/view?usp=sharing) | [Session 06](https://github.com/computationaldesignandfabrication/cdf1_teaching/tree/main/rhino) | 
 Jan 23 | **Concept Presentation and Feedback Session** |  |  |  | Assignment 05
-Jan 30 | **07 Slicing** | Slicing and print path generation | Slicing | [Session 08](https://github.com/computationaldesignandfabrication/cdf1_teaching/tree/main/rhino) | 
+Jan 30 | **07 Slicing and Print-path Generation** | Slicing and print path generation | [Slicing and Print-path Generation](https://drive.google.com/file/d/1qTs5d6KSWp1sJzmQzXdX7bB314BP6lsE/view?usp=sharing)| [Session 07](https://github.com/computationaldesignandfabrication/cdf1_teaching/tree/main/rhino) | 
 Feb 6 | **Final Design Presentation** |  |  |  |  Assignment 06
 
 
