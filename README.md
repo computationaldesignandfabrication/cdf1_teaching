@@ -6,7 +6,6 @@ Welcome to **Computational Design and Fabrication**, a platform dedicated to beg
 
 
 ## Session Blocks 
-## General Computational Geometry
 
 Title | Description | Slides | Session material | Assignment 
 ----- | ----------- | ------ | ---------------- | ----------
@@ -43,6 +42,7 @@ Title | Description | Slides | Session material | Assignment
 **Done! Now you can go to VS Code, Rhino, or Grasshopper to run the example files of CDF.**
 
 First time using VS Code and on Windows? Make sure select the correct terminal profile: Ctrl+Shift+P, Terminal: Select Default Profile and select Command Prompt.
+
 
 
 
