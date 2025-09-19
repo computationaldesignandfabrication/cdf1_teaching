@@ -10,13 +10,13 @@ Welcome to **Computational Design and Fabrication**, a platform dedicated to beg
 
 Title | Description | Slides | Session material | Assignment 
 ----- | ----------- | ------ | ---------------- | ----------
-**01 Python Basics** | Quick start on Python | [Python Basics](https://docs.google.com/presentation/d/1itrUdpCxscddm8ilBpDHMNRPB9uUaK41vLhZXXznRcU/edit#slide=id.g2cad153b9c9_0_202) | [Session 01](https://classroom.github.com/a/0gVDlBH0) |[Assignment 01](https://classroom.github.com/a/gEZq-xda)
-**01 Rhino Basics** | Quick start on Python | [Rhino Basics]() | [Session 01]() |[Assignment 01]()
+**01a Python Basics** | Quick start on Python | [Python Basics](https://docs.google.com/presentation/d/1itrUdpCxscddm8ilBpDHMNRPB9uUaK41vLhZXXznRcU/edit#slide=id.g2cad153b9c9_0_202) | [Session 01a](https://classroom.github.com/a/0gVDlBH0) |[Assignment 01a](https://classroom.github.com/a/gEZq-xda)
+**01b Rhino Basics** | Quick start on Rhino | [Rhino Basics]() | [Session 01b]() |[Assignment 01b]()
 **02 Geometry 2D** | 2D geometry  | [Geometry 2D](https://docs.google.com/presentation/d/1t5Old_fkJYUoT19DOXw5mV__aK2kXLFIzcbFNjCk49I/edit#slide=id.g2cad153b9c9_0_202) | [Session 02](https://classroom.github.com/a/tBISN_ul) | [Assignment 02](https://classroom.github.com/a/FkT2TYiD)
 **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](https://docs.google.com/presentation/d/1BRTuzIq9qnQWI6xbl-DzDe6EcIYqgHcdwXjCbWrDimM/edit?usp=sharing) | [Session 03](https://classroom.github.com/a/331M5qJj) | [Assignment 03](https://classroom.github.com/a/piywCTG7)
 **04 Meshses** | Meshes and mesh operations | [Meshes](https://docs.google.com/presentation/d/157haw_1_zLma1QmPeS_Vz5kyLTYuytL1gbhSn71Se1M/edit?usp=sharing) |  [Session 04](https://classroom.github.com/a/rlZ0hTCT) | [Assignment 04](https://classroom.github.com/a/5xxbA7C7)
 **05 Integrated Representations** |  | [Integrated Representation]() | [Session 05]()
-**06 Design Algorithms** | Design Algorithms | [Design Algorithms]() | [Session 06]() | 
+**06 Design Algorithms** |  | [Design Algorithms]() | [Session 06]() | 
 **07 Structural Form Finding** | Geometric form finding for compression-only structures | [Structural Form Finding]() | [Session 07]() |
 
 
@@ -43,3 +43,4 @@ Title | Description | Slides | Session material | Assignment
 **Done! Now you can go to VS Code, Rhino, or Grasshopper to run the example files of CDF.**
 
 First time using VS Code and on Windows? Make sure select the correct terminal profile: Ctrl+Shift+P, Terminal: Select Default Profile and select Command Prompt.
+
