@@ -12,7 +12,7 @@ Title | Description | Slides | Session material | Assignment
 **01a Python Basics** | Quick start on Python | [Python Basics](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2001%20Python%20Basics.pdf) | [Session 01a](https://classroom.github.com/a/0gVDlBH0) |[Assignment 01a](https://classroom.github.com/a/gEZq-xda)
 **01b Rhino Basics** | Quick start on Rhino | [Rhino Basics](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2001%20Rhino%20Basics.pdf) |  |
 **02 Geometry 2D** | 2D geometry  | [Geometry 2D](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2002%20Geometry%202D.pdf) | [Session 02](https://classroom.github.com/a/tBISN_ul) | [Assignment 02](https://classroom.github.com/a/FkT2TYiD)
-**03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D]() | [Session 03]() | [Assignment 03]()
+**03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2003%20Basic%20Geometry%203D.pdf) | [Session 03](https://classroom.github.com/a/331M5qJj) | [Assignment 03](https://classroom.github.com/a/piywCTG7)
 **04 Meshses** | Meshes and mesh operations | [Meshes]() |  [Session 04]() | [Assignment 04]()
 **05 Integrated Representations** | Integrated design and fabrication representations | [Integrated Representation]() | [Session 05]() | [Assignment 05]()
 **06 Design Algorithms** | Generative methods for creating form and structure | [Design Algorithms]() | [Session 06]() | [Assignment 06]()
@@ -42,6 +42,7 @@ Title | Description | Slides | Session material | Assignment
 **Done! Now you can go to VS Code, Rhino, or Grasshopper to run the example files of CDF.**
 
 First time using VS Code and on Windows? Make sure select the correct terminal profile: Ctrl+Shift+P, Terminal: Select Default Profile and select Command Prompt.
+
 
 
 
