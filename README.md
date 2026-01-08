@@ -14,9 +14,9 @@ Title | Description | Slides | Session material | Assignment
 **02 Geometry 2D** | 2D geometry  | [Geometry 2D](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2002%20Geometry%202D.pdf) | [Session 02](https://classroom.github.com/a/tBISN_ul) | [Assignment 02](https://classroom.github.com/a/FkT2TYiD)
 **03 Basic Geometry 3D** | 3D primitive geometry  | [Geometry 3D](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2003%20Basic%20Geometry%203D.pdf) | [Session 03](https://classroom.github.com/a/331M5qJj) | [Assignment 03](https://classroom.github.com/a/piywCTG7)
 **04 Meshses** | Meshes and mesh operations | [Meshes](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2004%20Meshes.pdf) |  [Session 04](https://classroom.github.com/assignment-invitations/380e9596c1d28ade12d9917156004a25/status) | [Assignment 04](https://classroom.github.com/assignment-invitations/6641726eccea3b9db9017547b04649f2/status)
-**05 Integrated Representations** | Integrated design and fabrication representations | [Integrated Representation](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2005%20Integrated%20Representations.pdf) | [Session 05](https://classroom.github.com/a/J5fiLqqq) | [Assignment 05]()
-**06 Design Algorithms** | Generative methods for creating form and structure | [Design Algorithms]() | [Session 06]() | [Assignment 06]()
-**07 Structural Form Finding** | Geometric form finding for compression-only structures | [Structural Form Finding]() | [Session 07]() | [Assignment 07]()
+**05 Integrated Representations** | Integrated design and fabrication representations | [Integrated Representation](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2005%20Integrated%20Representations.pdf) | [Session 05](https://classroom.github.com/a/J5fiLqqq) |
+**06 Design Algorithms** | Generative methods for creating form and structure | [Design Algorithms](https://github.com/computationaldesignandfabrication/cdf1_teaching/blob/main/sessions-slides/Session%2006%20Design%20Algorithms.pdf) | [Session 06](https://classroom.github.com/a/5SiJajj8) |
+**07 Structural Form Finding** | Geometric form finding for compression-only structures | [Structural Form Finding]() | [Session 07]() |
 
 
 ## Requirements
@@ -42,6 +42,7 @@ Title | Description | Slides | Session material | Assignment
 **Done! Now you can go to VS Code, Rhino, or Grasshopper to run the example files of CDF.**
 
 First time using VS Code and on Windows? Make sure select the correct terminal profile: Ctrl+Shift+P, Terminal: Select Default Profile and select Command Prompt.
+
 
 
 
