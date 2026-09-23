@@ -1,17 +1,15 @@
 """Classes"""
+
 # A class a code template for creating objects. Creating a new class creates a new type of object. 
 # Using this template, as many instances of that type can be made. Each class instance can have attributes attached to it for maintaining its state.
 
+# TODO: Create a class called Rectangle with attributes length and width.
+
 class Rectangle():
-    def __init__(self, length, width):
-        self.length = length
-        self.width = width 
-        
-    # Class function.
+    ...
 
-# Creating an instance of rectangle class.
-my_rectangle = Rectangle(length=3, width=5)
+# TODO: Add a class function to calculate the area of the rectangle.
 
-# Printing the area.
-area = None
-print()
+# TODO: Create an instance of rectangle class with length 5 and width 3.
+
+# TODO: Print the area.

@@ -9,7 +9,7 @@ Adding a new function with Copilot
    optional inputs, a docstring listing params, return a Rhino.Geometry object)."
 2. Once the function is added, ask Copilot:
    "Give me the Python code to use this function in a Grasshopper GHPython 3
-   component, importing it from spaicr."
+   component, importing it from computational_design_and_fabrication."
 3. Copy the snippet Copilot gives you into a GHPython component, wire up the
    inputs as sliders/panels, and set the output variable (e.g. `a`).
 """
