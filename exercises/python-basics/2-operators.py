@@ -18,6 +18,8 @@ print(subtraction)
 multiplication = ...
 print(multiplication)
 
+# ----------------------------------------------
+
 """Comparison operators"""
 
 # Comparison operators are used to compare two values. The result of a comparison is a Boolean value (True or False).
@@ -41,17 +43,7 @@ print(greater_than)
 less_or_equal = ...
 print(less_or_equal)
 
-"""Identity operators"""
-
-# Identity operators are used to compare the memory locations of two objects. The result of an identity operation is a Boolean value (True or False).
-
-# TODO: Write an IS identity comparison using the above variables.
-is_same = ...
-print(is_same)
-
-# TODO: Write a IS NOT identity comparison using the above variables.
-is_not_same = ...
-print(is_not_same)
+# ----------------------------------------------
 
 """Logical operators"""
 
@@ -69,6 +61,23 @@ print(logical_or)
 logical_not = ...
 print(logical_not)
 
+# ----------------------------------------------
+
+"""Identity operators"""
+
+# Identity operators are used to compare the memory locations of two objects. The result of an identity operation is a Boolean value (True or False).
+a = 1
+b = 20
+
+# TODO: Write an IS identity comparison using the above variables.
+is_same = ...
+print(is_same)
+
+# TODO: Write a IS NOT identity comparison using the above variables.
+is_not_same = ...
+print(is_not_same)
+
+# ----------------------------------------------
 
 """Membership operators"""
 
@@ -76,10 +85,10 @@ print(logical_not)
 
 my_list = [1, 2, 3, 4, 5, 10]  # List datatype
 
-# TODO: Write an IN membership operation to check if 10 is in my_list.
+# TODO: Write an IN membership operation to check if a is in my_list.
 is_in_list = ...
 print(is_in_list)
 
-# TODO: Write a NOT IN membership operation to check if 21 is not in my_list.
+# TODO: Write a NOT IN membership operation to check if b is not in my_list.
 is_not_in_list = ...
 print(is_not_in_list)

@@ -35,57 +35,20 @@ def create_cone(base_point=None, height=10.0, radius=5.0, cap_bottom=True):
     cone = rg.Cone(plane, height, radius)
     return cone.ToBrep(cap_bottom)
 
+def create_sphere():
+    pass  # TODO: Implement this function to create a sphere using Rhino.Geometry
 
-def create_fractal_tree(
-    base_point=None,
-    base_plane=None,
-    length=10.0,
-    angle=25.0,
-    length_factor=0.7,
-    depth=8,
-    branch_count=2,
-):
+def boolean_difference(brep_a, brep_b):
     """
-    Build a fractal (recursively branching) tree as a list of line segments.
+    Perform a boolean difference operation between two Breps.
 
-    base_point    : Rhino.Geometry.Point3d -- start point of the trunk
-    base_plane    : Rhino.Geometry.Plane   -- plane whose YAxis is the trunk
-                     direction and ZAxis is the branching rotation axis
-    length        : float -- trunk length
-    angle         : float -- angle in degrees between sibling branches
-    length_factor : float -- length multiplier applied at each new generation
-    depth         : int   -- number of recursive branching generations
-    branch_count  : int   -- number of branches spawned at each node
+    brep_a : Rhino.Geometry.Brep -- the first Brep
+    brep_b : Rhino.Geometry.Brep -- the second Brep to subtract from the first
 
-    Returns a list of Rhino.Geometry.Line.
+    Returns a list of Rhino.Geometry.Brep resulting from the difference.
     """
-    if base_point is None:
-        base_point = rg.Point3d(0, 0, 0)
-    if base_plane is None:
-        base_plane = rg.Plane.WorldXY
+    if brep_a is None or brep_b is None:
+        raise ValueError("Both brep_a and brep_b must be provided.")
 
-    lines = []
-
-    def _grow(start, direction, branch_length, remaining_depth):
-        if remaining_depth <= 0 or branch_length <= 1e-6:
-            return
-
-        end = start + direction * branch_length
-        lines.append(rg.Line(start, end))
-
-        if branch_count <= 1:
-            offsets = [0.0]
-        else:
-            span = angle * (branch_count - 1)
-            offsets = [-span / 2.0 + i * angle for i in range(branch_count)]
-
-        for offset in offsets:
-            rotated_direction = rg.Vector3d(direction)
-            rotated_direction.Rotate(math.radians(offset), base_plane.ZAxis)
-            _grow(end, rotated_direction, branch_length * length_factor, remaining_depth - 1)
-
-    _grow(base_point, base_plane.YAxis, length, depth)
-
-    return lines
-
-
+    result = rg.Brep.CreateBooleanDifference(brep_a, brep_b, 0.001)
+    return result

@@ -1,4 +1,5 @@
 """Datatypes and assignment"""
+
 # This file demonstrates the use of different data types in Python.
 
 # TODO: Write correct value types to variables.
@@ -12,7 +13,9 @@ d = ...              # Boolean
 
 # TODO: Print types of values.
 
-# TODO: Print the length of the list.
+# ----------------------------------------------
+
+"""Lists and dictionaries"""
 
 # TODO: Make a list of 5 numbers and a string and assign it to a variable.
 my_list = None        # List
