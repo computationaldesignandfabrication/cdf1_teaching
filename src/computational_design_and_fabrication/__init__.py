@@ -20,6 +20,9 @@ Describe typical classes found in project
 
 """
 
-from .sample_module import SampleClassName
+from .geometry_basics import *
+from .algorithms import *
 
-__all__ = ['SampleClassName']
+# If you add a new python file...
+
+__all__ = []
