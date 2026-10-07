@@ -29,11 +29,21 @@ Title | Description | Slides | Session material | Assignment
 
 ### Cloning the CDF Repository to your workstation
 
-1. Create a **workspace** directory in your File Explorer:
+1. Create a **workspace** folder in File Explorer:
 
-    C:\Users\your_username\workspace
+    `C:\Users\your_username\workspace`
 
-2. Open Github Desktop and clone the [CDF repository](https://github.com/computationaldesignandfabrication/cdf1_teaching) into your **workspace** folder.
+2. Open **GitHub Desktop** and click **Current Repository** (top left), then **Add > Clone Repository...**.
+
+3. Select the **URL** tab and paste:
+
+    `https://github.com/computationaldesignandfabrication/cdf1_teaching.git`
+
+4. Set the **Local Path** (bottom) so it looks like:
+
+    `C:\Users\your_username\workspace\cdf1_teaching`
+
+5. Click **Clone**.
 
 ### Setting up your GitHub Copilot account
 
