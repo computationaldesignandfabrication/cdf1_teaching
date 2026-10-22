@@ -52,3 +52,26 @@ def boolean_difference(brep_a, brep_b):
 
     result = rg.Brep.CreateBooleanDifference(brep_a, brep_b, 0.001)
     return result
+
+
+def copy_brep_along_z(brep, distance, copy_count):
+    """
+    Create copies of a Brep, each offset in the +Z direction.
+
+    brep : Rhino.Geometry.Brep -- the Brep to copy
+    distance : float -- the Z spacing between consecutive copies
+    copy_count : int -- the number of copies to create
+
+    Returns a list of Rhino.Geometry.Brep copies; copy i is moved by distance * (i + 1).
+    """
+    if brep is None:
+        raise ValueError("brep must be provided.")
+    if copy_count < 0:
+        raise ValueError("copy_count must not be negative.")
+
+    copies = []
+    for i in range(1, int(copy_count) + 1):
+        copy = brep.DuplicateBrep()
+        copy.Transform(rg.Transform.Translation(rg.Vector3d(0, 0, distance * i)))
+        copies.append(copy)
+    return copies
