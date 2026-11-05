@@ -12,39 +12,37 @@ For instructions on specific crochet techniques referenced in the pseudocode (sl
 ![Pseudosphere](pseudosphere.png)
 
 ```
-PROCEDURE CrochetPseudosphere()
+PROCEDURE CrochetPseudosphere(base_chain_stitch_count=4, first_round_stitch_count=12, rounds=5, increase=3)
+
     // 1. Start and make a base line
     current_layer = 0
     CALL make_a_starting_slipknot() // go to video for instructions
 
-    FOR index = 1 TO 4
+    FOR index = 1 TO base_chain_stitch_count
         CALL make_a_chain_stitch() // go to video for instructions
     END FOR
 
     // 2. Join to the first stitch to make a ring
     CALL make_a_slipstitch_to_first_chain()  // go to video for instructions
 
-    // 3. Make 12 double crochets into the ring center
+    // 3. Make double crochets into the ring center
     current_stitches_in_round = 0
-    FOR i = 1 TO 12
+    FOR i = 1 TO first_round_stitch_count
         CALL double_crochet_into_the_ring_center()
         current_stitches_in_round = current_stitches_in_round + 1
     END FOR
     current_layer = current_layer + 1
 
-    // 4. Hyperbolic expansion in spiral: Make 3x double crochet to each stitch
-    continue_pattern = TRUE
-    WHILE continue_pattern = TRUE DO
+    // 4. Hyperbolic expansion in spiral: Make "increase" times double crochet to each stitch
+    FOR r = 1 TO rounds
         FOR s = 1 TO current_stitches_in_round
-            FOR k = 1 TO 3
+            FOR k = 1 TO increase
                 CALL double_crochet_to_stitch() // go to video for instructions
             END FOR
         END FOR
-        current_stitches_in_round = current_stitches_in_round * 3
+        current_stitches_in_round = current_stitches_in_round * increase
         current_layer = current_layer + 1
-
-        continue_pattern = check_if_continue()
-    END WHILE
+    END FOR
 
     CALL finish_pattern() // go to video for instructions 
 
@@ -58,26 +56,26 @@ END PROCEDURE
 ![Hyperbolic surface](hyperbolic.png)
 
 ```
-PROCEDURE CrochetHyperbolicSurfaceOrnament()
+PROCEDURE CrochetHyperbolicSurfaceOrnament(base_chain_stitch_count=16, rows=3, increase=2)
+
     // 1. Start and make base line
     current_layer = 0
     CALL make_a_starting_slipknot() // go to video for instructions
 
     current_stitches_in_line = 0
-    FOR i = 1 TO 16
+    FOR i = 1 TO base_chain_stitch_count
         CALL make_a_chain_stitch() // go to video for instructions
         current_stitches_in_line = current_stitches_in_line +1
     END FOR
 
-    // 2. Hyperbolic expansion in rows: Make 2x double crochet to each stitch
-    row_count = 3
-    FOR r = 1 TO row_count
+    // 2. Hyperbolic expansion in rows: Make "increase" times double crochet to each stitch
+    FOR r = 1 TO rows
         FOR s = 1 TO current_stitches_in_line
-            FOR k = 1 TO 2
+            FOR k = 1 TO increase
                 CALL double_crochet_in_line()
             END FOR
         END FOR
-        current_stitches_in_line = current_stitches_in_line * 2
+        current_stitches_in_line = current_stitches_in_line * increase
         current_layer = current_layer + 1
 
         CALL turn_work() 
