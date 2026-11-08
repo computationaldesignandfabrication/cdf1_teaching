@@ -2,8 +2,9 @@
 
 Pick **one** of the two examples below and follow its pseudocode, stitch by stitch, to actually crochet the piece.
 
-For instructions on specific crochet techniques referenced in the pseudocode (slipknot, chain stitch, slipstitch, double crochet, turning work, etc.), watch the videos here:
-[Crochet technique videos (Google Drive)](https://drive.google.com/drive/folders/1fw-1CDxeuUIQ1zDhzpR52ZHCn_w4t_O_?usp=sharing)
+For instructions on specific crochet techniques referenced in the pseudocode (e.g. make_a_starting_slipknot()), watch the videos on moodle:
+[Crochet instructional videos](https://www.moodle.tum.de/mod/page/view.php?id=4033750)
+
 
 ---
 
@@ -51,12 +52,12 @@ END PROCEDURE
 
 ---
 
-## Example 2: Hyperbolic Surface Ornament
+## Example 2: Hyperbolic Surface 
 
 ![Hyperbolic surface](hyperbolic.png)
 
 ```
-PROCEDURE CrochetHyperbolicSurfaceOrnament(base_chain_stitch_count=16, rows=3, increase=2)
+PROCEDURE CrochetHyperbolicSurface(base_chain_stitch_count=16, rows=3, increase=2)
 
     // 1. Start and make base line
     current_layer = 0

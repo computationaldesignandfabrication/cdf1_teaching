@@ -308,3 +308,280 @@ def create_crochet_pseudosphere(
     mesh.Compact()
     return mesh
 
+
+# ======================================================================
+# Tangent sphere growth (exercise)
+#
+# Fill in every line marked TODO. A `...` is a blank you replace with
+# the right value; a commented-out line is a call you complete and
+# uncomment. The module imports fine as it is, but grow_tangent_spheres
+# only works once all TODOs are done.
+# ======================================================================
+
+# ----------------------------------------------------------------------
+# STEP 1 -- Random directions + rotation
+# ----------------------------------------------------------------------
+
+def random_unit_vector():
+    """Return a random direction on the unit sphere."""
+    z = random.uniform(-1.0, 1.0)
+    t = random.uniform(0.0, 2.0 * math.pi)
+    r = math.sqrt(1.0 - z * z)
+    return rg.Vector3d(r * math.cos(t), r * math.sin(t), z)
+
+
+def rotate_vector(v, axis, angle_rad):
+    """Rotate vector v around axis by angle (radians).
+
+    Params:
+        v (Rhino.Geometry.Vector3d): Vector to rotate. It is not changed.
+        axis (Rhino.Geometry.Vector3d): Rotation axis.
+        angle_rad (float): Rotation angle in radians.
+
+    Returns:
+        Rhino.Geometry.Vector3d: The rotated copy of v.
+    """
+    # TODO 1.1 -- copy the input vector and the axis
+    vv = rg.Vector3d(...)
+    ax = rg.Vector3d(...)
+
+    # TODO 1.2 -- the axis must be unit length (which Vector3d method?)
+    # ax.???()
+
+    # TODO 1.3 -- build a Rhino rotation transform around the world origin
+    xform = rg.Transform.Rotation(
+        ...,                  # angle_rad
+        ...,                  # ax
+        rg.Point3d.Origin,
+    )
+
+    # TODO 1.4 -- apply the transform to the vector (in place)
+    # vv.???(xform)
+
+    return vv
+
+
+def random_deflect(dir_vec, angle_max):
+    """Deflect a direction vector by a random small rotation.
+
+    Idea:
+      - build a plane perpendicular to the direction,
+      - pick a random axis in that plane,
+      - rotate by a random angle up to angle_max.
+
+    Params:
+        dir_vec (Rhino.Geometry.Vector3d): Direction to deflect.
+        angle_max (float): Largest deflection angle in radians.
+
+    Returns:
+        Rhino.Geometry.Vector3d: The deflected direction.
+    """
+    # TODO 1.5 -- copy and unitize the incoming direction
+    d = rg.Vector3d(...)
+    # d.???()
+
+    # choose a helper vector that is not (nearly) parallel to d
+    helper = rg.Vector3d(0, 0, 1)
+    if abs(rg.Vector3d.Multiply(d, helper)) > 0.95:
+        helper = rg.Vector3d(0, 1, 0)
+
+    # TODO 1.6 -- build a perpendicular frame U, V around d
+    U = rg.Vector3d.CrossProduct(..., ...)
+    # U.???()
+    V = rg.Vector3d.CrossProduct(..., ...)
+    # V.???()
+
+    # 1.7 -- pick a random axis in the perpendicular plane
+    phi = random.uniform(0.0, 2.0 * math.pi)
+    axis = U * math.cos(phi) + V * math.sin(phi)
+
+    # TODO 1.8 -- rotate by a random angle up to angle_max
+    ang = random.uniform(0.0, ...)
+    return rotate_vector(d, axis, ang)
+
+
+# ----------------------------------------------------------------------
+# STEP 2 -- Spatial hash (fast collision checks)
+# ----------------------------------------------------------------------
+
+def cell_key(pt, cs):
+    """Map a 3D point to a grid cell index (ix, iy, iz) for cell size cs."""
+    return (
+        int(math.floor(pt.X / cs)),
+        int(math.floor(pt.Y / cs)),
+        int(math.floor(pt.Z / cs)),
+    )
+
+
+def neighbor_keys(k):
+    """Yield the 27 cell keys around and including cell k (3x3x3)."""
+    x, y, z = k
+    for dx in (-1, 0, 1):
+        for dy in (-1, 0, 1):
+            for dz in (-1, 0, 1):
+                yield (x + dx, y + dy, z + dz)
+
+
+def can_place_tangent(center, r_child, grid, cs, eps=1e-6):
+    """Check whether a sphere can be placed without overlapping others.
+
+    Touching is allowed, overlapping is not. Two spheres overlap when
+        distance < r_child + r_existing - eps
+
+    Params:
+        center (Rhino.Geometry.Point3d): Center of the new sphere.
+        r_child (float): Radius of the new sphere.
+        grid (dict): Spatial hash, cell key -> list of (center, radius).
+        cs (float): Cell size of the grid.
+        eps (float): Tolerance so touching spheres count as free. Default 1e-6.
+
+    Returns:
+        bool: True if the sphere fits.
+    """
+    k = cell_key(center, cs)
+
+    # 2.2 -- only check spheres in nearby grid cells
+    for nk in neighbor_keys(k):
+        if nk not in grid:
+            continue
+
+        for (c2, r2) in grid[nk]:
+            # TODO 2.1 -- fill in the overlap rule
+            if center.DistanceTo(c2) < (... + ... - eps):
+                return False
+
+    return True
+
+
+def add_to_grid(center, radius, grid, cs):
+    """Store (center, radius) in its grid cell for fast lookup later."""
+    key = cell_key(center, cs)
+    # TODO 2.3 -- what do we store for each sphere?
+    grid.setdefault(key, []).append((..., ...))
+
+
+# ----------------------------------------------------------------------
+# STEP 3 + 4 -- Growth
+# ----------------------------------------------------------------------
+
+def grow_tangent_spheres(
+    seed_pt=None,
+    seed_radius=5.0,
+    iterations=30,
+    radius_decay=0.92,
+    branch_chance=0.2,
+    angle_max=0.8,
+    min_radius=0.5,
+    seed_dir=None,
+    seed=None,
+):
+    """Grow a branching chain of touching spheres from a seed sphere.
+
+    Every generation, each tip places one child sphere (sometimes two) that
+    touches its parent. The child is a bit smaller and points in a slightly
+    deflected direction. Children that would overlap an existing sphere are
+    retried in another direction; growth stops when nothing fits anymore.
+
+    Params:
+        seed_pt (Rhino.Geometry.Point3d): Start point. Default world origin.
+        seed_radius (float): Radius of the first sphere. Default 5.0.
+        iterations (int): Maximum number of generations. Default 30.
+        radius_decay (float): Shrink factor per generation. Default 0.92.
+        branch_chance (float): Chance (0-1) that a tip gets a second child.
+            Default 0.2.
+        angle_max (float): Largest deflection per generation, in radians.
+            Default 0.8. Below about 0.6 a second child never fits beside
+            its sibling, so the growth does not branch.
+        min_radius (float): Stop growing a branch when spheres get smaller
+            than this. Default 0.5.
+        seed_dir (Rhino.Geometry.Vector3d): Initial direction. None picks a
+            random one. Default None.
+        seed (int): Random seed; the same seed gives the same result.
+            None gives a new result every time. Default None.
+
+    Returns:
+        tuple: (spheres, lines, tip_points)
+            spheres    -- list of Rhino.Geometry.Sphere
+            lines      -- list of Rhino.Geometry.Line, parent to child
+            tip_points -- list of Rhino.Geometry.Point3d, the last tips
+    """
+    if seed_pt is None:
+        seed_pt = rg.Point3d(0, 0, 0)
+    if seed is not None:
+        random.seed(seed)
+
+    # STEP 3 -- initial direction: use seed_dir if given, otherwise random
+    if seed_dir:
+        # TODO 3.1 -- copy and unitize seed_dir
+        d0 = rg.Vector3d(...)
+        # d0.???()
+    else:
+        d0 = random_unit_vector()
+
+    spheres, lines = [], []
+
+    # TODO 4.1 -- choose the cell size for the spatial hash
+    cell_size = max(... * seed_radius, ... * min_radius)
+
+    grid = {}
+
+    # 4.2 -- create the seed sphere and store it in the grid
+    spheres.append(rg.Sphere(seed_pt, seed_radius))
+    add_to_grid(seed_pt, seed_radius, grid, cell_size)
+
+    # 4.3 -- tips are the active growth states: (point, direction, radius)
+    tips = [(seed_pt, d0, seed_radius)]
+
+    for i in range(iterations):
+
+        new_tips = []
+
+        # 4.4 -- grow from each active tip
+        for (pt, d, r_parent) in tips:
+
+            # child radius shrinks
+            r_child = r_parent * radius_decay
+            if r_child < min_radius:
+                continue
+
+            # TODO 4.5 -- branching: usually 1 child, sometimes 2
+            n_children = 1 + (1 if random.random() < ... else 0)
+
+            for c in range(n_children):
+
+                # TODO 4.6 -- how many attempts to find a free placement?
+                for t in range(...):
+
+                    # new direction = deflected parent direction
+                    d_child = random_deflect(d, angle_max)
+                    d_child.Unitize()
+
+                    # TODO 4.7 -- tangency rule:
+                    # distance between centers = r_parent + r_child
+                    step = ... + ...
+                    new_pt = pt + d_child * step
+
+                    # 4.8 -- accept only if nothing overlaps
+                    if can_place_tangent(new_pt, r_child, grid, cell_size, eps=1e-4):
+
+                        spheres.append(rg.Sphere(new_pt, r_child))
+                        add_to_grid(new_pt, r_child, grid, cell_size)
+
+                        # connection line from parent to child
+                        lines.append(rg.Line(pt, new_pt))
+
+                        # the child becomes a new tip
+                        new_tips.append((new_pt, d_child, r_child))
+                        break  # placed, stop trying
+
+        # 4.9 -- stop early if nothing new could be placed
+        if not new_tips:
+            break
+
+        tips = new_tips
+
+    # STEP 5 -- output only the tip points
+    tip_points = [pt for (pt, d, r) in tips]
+
+    return spheres, lines, tip_points
+
