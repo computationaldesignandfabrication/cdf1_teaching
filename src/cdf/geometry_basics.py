@@ -15,6 +15,7 @@ Adding a new function with Copilot
 """
 
 import math
+import random
 import Rhino.Geometry as rg
 
 
@@ -168,6 +169,28 @@ def boolean_difference(brep_a, brep_b):
     return result
 
 
+def boolean_difference_second(brep_a, brep_b, tolerance=0.001):
+    """
+    Return only the part of the second Brep outside the first Brep (B - A).
+
+    brep_a    : Rhino.Geometry.Brep -- geometry to subtract from the second Brep
+    brep_b    : Rhino.Geometry.Brep -- geometry whose non-overlapping part is kept
+    tolerance : float -- Rhino boolean operation tolerance
+
+    Returns a list of Rhino.Geometry.Brep results; an empty list means no part
+    of brep_b remains outside brep_a.
+    """
+    if brep_a is None or brep_b is None:
+        raise ValueError("Both brep_a and brep_b must be provided.")
+    if not math.isfinite(tolerance) or tolerance <= 0:
+        raise ValueError("tolerance must be greater than zero.")
+
+    result = rg.Brep.CreateBooleanDifference([brep_b], [brep_a], tolerance)
+    if result is None:
+        raise RuntimeError("Boolean difference failed for brep_b minus brep_a.")
+    return result
+
+
 def copy_brep_along_z(brep, distance, copy_count):
     """
     Create copies of a Brep, each offset in the +Z direction.
@@ -191,167 +214,129 @@ def copy_brep_along_z(brep, distance, copy_count):
     return copies
 
 
-def create_windowed_building(
+def create_building(
     origin=None,
-    building_width=20.0,
-    building_depth=10.0,
-    building_height=20.0,
-    window_width=2.0,
+    building_width=30.0,
+    building_depth=20.0,
+    building_height=30.0,
+    window_width=3.0,
+    window_height=4.0,
     window_depth=1.0,
-    window_height=2.0,
-    spacing=1.0,
+    spacing=2.0,
     tolerance=0.001,
 ):
     """
-    Cut centered grids of rectangular windows into all four vertical faces of a box.
+    Create a box building with regularly spaced recessed windows on four sides.
 
-    origin         : Rhino.Geometry.Point3d or Rhino.Geometry.Plane -- lower corner and orientation
-    building_width : float -- building size along the origin plane's X-axis
-    building_depth : float -- building size along the origin plane's Y-axis
-    building_height: float -- building size along the origin plane's Z-axis
-    window_width   : float -- window size across each face
-    window_depth   : float -- recess depth into the building from each face
-    window_height  : float -- window size along the building's Z-axis
-    spacing        : float -- minimum gap between windows and edges (at least 1)
-    tolerance      : float -- Rhino boolean operation tolerance
+    origin         : Rhino.Geometry.Point3d -- lower corner of the building
+    building_width : float -- building size along world X
+    building_depth : float -- building size along world Y
+    building_height: float -- building size along world Z
+    window_width   : float -- window width along each facade
+    window_height  : float -- window height
+    window_depth   : float -- recess depth into the building
+    spacing        : float -- clear gap between adjacent windows
+    tolerance      : float -- Rhino boolean tolerance
 
     Returns a list of Rhino.Geometry.Brep results.
     """
     if origin is None:
         origin = rg.Point3d(0, 0, 0)
-
-    if isinstance(origin, rg.Plane):
-        building_plane = origin
-    elif isinstance(origin, rg.Point3d):
-        building_plane = rg.Plane(origin, rg.Vector3d.ZAxis)
-    else:
-        raise TypeError("origin must be a Rhino.Geometry.Point3d or Rhino.Geometry.Plane.")
+    elif not isinstance(origin, rg.Point3d):
+        raise TypeError("origin must be a Rhino.Geometry.Point3d.")
 
     dimensions = (
         building_width,
         building_depth,
         building_height,
         window_width,
-        window_depth,
         window_height,
+        window_depth,
+        tolerance,
     )
-    if any(dimension <= 0 for dimension in dimensions):
-        raise ValueError("Building and window dimensions must all be greater than zero.")
-    if spacing < 1.0:
-        raise ValueError("spacing must be at least 1.0.")
-    if window_depth > min(building_width, building_depth):
+    if any(not math.isfinite(value) or value <= 0 for value in dimensions):
+        raise ValueError("Building, window, and tolerance dimensions must be positive.")
+    if not math.isfinite(spacing) or spacing < 0:
+        raise ValueError("spacing must be zero or greater.")
+    if window_depth * 2 >= min(building_width, building_depth):
         raise ValueError(
-            "window_depth must not be greater than the smaller building footprint dimension."
+            "window_depth must be less than half the smaller building footprint dimension."
         )
-    if tolerance <= 0:
-        raise ValueError("tolerance must be greater than zero.")
 
     building = create_box(
-        building_plane,
+        origin,
         length=building_width,
         width=building_depth,
         height=building_height,
     )
 
-    corner_clearance = max(spacing, window_depth)
+    cutter_overrun = tolerance * 2.0
+    edge_clearance = max(2.0, window_depth + cutter_overrun)
 
-    def window_positions(span, window_size, edge_clearance):
-        count = max(
-            0,
-            int(
-                math.floor(
-                    (span - 2 * edge_clearance + spacing)
-                    / (window_size + spacing)
-                )
-            ),
-        )
-        occupied = count * window_size + max(0, count - 1) * spacing
+    def centered_positions(span, item_size, margin):
+        usable_span = span - 2.0 * margin
+        if usable_span < item_size:
+            return []
+        count = int((usable_span + spacing) // (item_size + spacing))
+        occupied = count * item_size + max(0, count - 1) * spacing
         first = (span - occupied) / 2.0
-        return [first + index * (window_size + spacing) for index in range(count)]
+        return [first + index * (item_size + spacing) for index in range(count)]
 
-    front_positions = window_positions(
-        building_width, window_width, corner_clearance
+    x_positions = centered_positions(
+        building_width, window_width, edge_clearance
     )
-    side_positions = window_positions(
-        building_depth, window_width, corner_clearance
+    y_positions = centered_positions(
+        building_depth, window_width, edge_clearance
     )
-    height_positions = window_positions(
-        building_height, window_height, spacing
-    )
-
+    z_positions = centered_positions(building_height, window_height, 2.0    )
     window_boxes = []
-    for z in height_positions:
-        for x in front_positions:
-            front_origin = (
-                building_plane.Origin
-                + building_plane.XAxis * x
-                + building_plane.ZAxis * z
+
+    for z in z_positions:
+        for x in x_positions:
+            window_origin = origin + rg.Vector3d(x, -cutter_overrun, z)
+            window_boxes.append(
+                create_box(
+                    window_origin,
+                    length=window_width,
+                    width=window_depth + cutter_overrun,
+                    height=window_height,
+                )
             )
-            back_origin = (
-                building_plane.Origin
-                + building_plane.XAxis * (x + window_width)
-                + building_plane.YAxis * building_depth
-                + building_plane.ZAxis * z
+            window_origin = origin + rg.Vector3d(
+                x,
+                building_depth - window_depth,
+                z,
             )
-            window_boxes.extend(
-                (
-                    create_box(
-                        rg.Plane(
-                            front_origin,
-                            building_plane.XAxis,
-                            building_plane.YAxis,
-                        ),
-                        length=window_width,
-                        width=window_depth,
-                        height=window_height,
-                    ),
-                    create_box(
-                        rg.Plane(
-                            back_origin,
-                            -building_plane.XAxis,
-                            -building_plane.YAxis,
-                        ),
-                        length=window_width,
-                        width=window_depth,
-                        height=window_height,
-                    ),
+            window_boxes.append(
+                create_box(
+                    window_origin,
+                    length=window_width,
+                    width=window_depth + cutter_overrun,
+                    height=window_height,
                 )
             )
 
-        for y in side_positions:
-            left_origin = (
-                building_plane.Origin
-                + building_plane.YAxis * (y + window_width)
-                + building_plane.ZAxis * z
+        for y in y_positions:
+            window_origin = origin + rg.Vector3d(-cutter_overrun, y, z)
+            window_boxes.append(
+                create_box(
+                    window_origin,
+                    length=window_depth + cutter_overrun,
+                    width=window_width,
+                    height=window_height,
+                )
             )
-            right_origin = (
-                building_plane.Origin
-                + building_plane.XAxis * building_width
-                + building_plane.YAxis * y
-                + building_plane.ZAxis * z
+            window_origin = origin + rg.Vector3d(
+                building_width - window_depth,
+                y,
+                z,
             )
-            window_boxes.extend(
-                (
-                    create_box(
-                        rg.Plane(
-                            left_origin,
-                            -building_plane.YAxis,
-                            building_plane.XAxis,
-                        ),
-                        length=window_width,
-                        width=window_depth,
-                        height=window_height,
-                    ),
-                    create_box(
-                        rg.Plane(
-                            right_origin,
-                            building_plane.YAxis,
-                            -building_plane.XAxis,
-                        ),
-                        length=window_width,
-                        width=window_depth,
-                        height=window_height,
-                    ),
+            window_boxes.append(
+                create_box(
+                    window_origin,
+                    length=window_depth + cutter_overrun,
+                    width=window_width,
+                    height=window_height,
                 )
             )
 
@@ -360,5 +345,422 @@ def create_windowed_building(
 
     result = rg.Brep.CreateBooleanDifference([building], window_boxes, tolerance)
     if result is None or len(result) == 0:
-        raise RuntimeError("Boolean difference failed while cutting the window openings.")
+        raise RuntimeError("Boolean difference failed while cutting the windows.")
     return result
+
+
+def create_spiral(
+    origin=None,
+    radius=10.0,
+    height=20.0,
+    revolutions=3.0,
+    points_per_revolution=24,
+):
+    """
+    Create a smooth helical curve around a vertical axis through origin.
+
+    The curve follows x = cx + r*cos(t), y = cy + r*sin(t), and
+    z = cz + height*t/(2*pi*revolutions), for t from 0 to 2*pi*revolutions.
+
+    origin                  : Rhino.Geometry.Point3d -- center of the spiral axis
+    radius                  : float -- distance from the axis to the curve
+    height                  : float -- total vertical rise
+    revolutions             : float -- number of complete turns
+    points_per_revolution   : int -- sampling density used to build the curve
+
+    Returns a Rhino.Geometry.Curve.
+    """
+    if origin is None:
+        origin = rg.Point3d(0, 0, 0)
+    elif not isinstance(origin, rg.Point3d):
+        raise TypeError("origin must be a Rhino.Geometry.Point3d.")
+
+    if not math.isfinite(radius) or radius <= 0:
+        raise ValueError("radius must be greater than zero.")
+    if not math.isfinite(height) or height <= 0:
+        raise ValueError("height must be greater than zero.")
+    if not math.isfinite(revolutions) or revolutions <= 0:
+        raise ValueError("revolutions must be greater than zero.")
+    if (
+        int(points_per_revolution) != points_per_revolution
+        or points_per_revolution < 3
+    ):
+        raise ValueError("points_per_revolution must be a whole number of at least 3.")
+    points_per_revolution = int(points_per_revolution)
+
+    sample_count = max(3, int(math.ceil(revolutions * points_per_revolution)))
+    points = []
+    for index in range(sample_count + 1):
+        fraction = index / float(sample_count)
+        angle = 2.0 * math.pi * revolutions * fraction
+        points.append(
+            rg.Point3d(
+                origin.X + radius * math.cos(angle),
+                origin.Y + radius * math.sin(angle),
+                origin.Z + height * fraction,
+            )
+        )
+
+    curve = rg.Curve.CreateInterpolatedCurve(points, 3)
+    if curve is None:
+        raise RuntimeError("Rhino failed to interpolate the spiral curve.")
+    return curve
+
+
+def create_spheres_along_spiral(
+    origin=None,
+    spiral_radius=10.0,
+    spiral_height=20.0,
+    revolutions=3.0,
+    sphere_radius=1.0,
+    additional_spheres=5,
+    points_per_revolution=24,
+):
+    """
+    Create a spiral and place a sphere at its start and additional spheres along it.
+
+    origin                  : Rhino.Geometry.Point3d -- center of the spiral axis
+    spiral_radius           : float -- distance from the axis to the spiral
+    spiral_height           : float -- vertical rise of the spiral
+    revolutions             : float -- number of complete turns in the spiral
+    sphere_radius           : float -- radius of every sphere
+    additional_spheres      : int -- number of spheres after the starting sphere
+    points_per_revolution   : int -- curve sampling density
+
+    Returns a list of Rhino.Geometry.Brep spheres.
+    """
+    if not math.isfinite(sphere_radius) or sphere_radius <= 0:
+        raise ValueError("sphere_radius must be greater than zero.")
+    if int(additional_spheres) != additional_spheres or additional_spheres < 0:
+        raise ValueError("additional_spheres must be a non-negative whole number.")
+    additional_spheres = int(additional_spheres)
+
+    curve = create_spiral(
+        origin=origin,
+        radius=spiral_radius,
+        height=spiral_height,
+        revolutions=revolutions,
+        points_per_revolution=points_per_revolution,
+    )
+    start_point = curve.PointAtNormalizedLength(0.0)
+    spheres = [create_sphere(start_point, radius=sphere_radius)]
+    if additional_spheres == 0:
+        return spheres
+
+    for index in range(1, additional_spheres + 1):
+        path_point = curve.PointAtNormalizedLength(
+            index / float(additional_spheres)
+        )
+        sphere = spheres[0].DuplicateBrep()
+        sphere.Transform(
+            rg.Transform.Translation(
+                rg.Vector3d(
+                    path_point.X - start_point.X,
+                    path_point.Y - start_point.Y,
+                    path_point.Z - start_point.Z,
+                )
+            )
+        )
+        spheres.append(sphere)
+
+    return spheres
+
+
+def create_xy_array(geometry, count_x=3, count_y=3, gap=1.0):
+    """
+    Duplicate Rhino geometry into an X-Y array with clear gaps between copies.
+
+    geometry : Rhino.Geometry.GeometryBase -- object to duplicate
+    count_x  : int -- number of copies along world X
+    count_y  : int -- number of copies along world Y
+    gap      : float -- minimum clear gap between neighboring bounding boxes
+
+    Returns a list of duplicated Rhino geometry objects, including the original position.
+    """
+    if not isinstance(geometry, rg.GeometryBase):
+        raise TypeError("geometry must be a Rhino.Geometry.GeometryBase object.")
+    if int(count_x) != count_x or count_x < 1:
+        raise ValueError("count_x must be a positive whole number.")
+    if int(count_y) != count_y or count_y < 1:
+        raise ValueError("count_y must be a positive whole number.")
+    if not math.isfinite(gap) or gap <= 0:
+        raise ValueError("gap must be greater than zero to keep copies from touching.")
+
+    count_x = int(count_x)
+    count_y = int(count_y)
+    bounds = geometry.GetBoundingBox(True)
+    if not bounds.IsValid:
+        raise ValueError("geometry must have a valid bounding box.")
+
+    step_x = bounds.Max.X - bounds.Min.X + gap
+    step_y = bounds.Max.Y - bounds.Min.Y + gap
+    copies = []
+
+    for row in range(count_y):
+        for column in range(count_x):
+            duplicate = geometry.Duplicate()
+            if duplicate is None:
+                raise RuntimeError("Rhino failed to duplicate the input geometry.")
+            if row or column:
+                translation = rg.Transform.Translation(
+                    rg.Vector3d(column * step_x, row * step_y, 0)
+                )
+                if not duplicate.Transform(translation):
+                    raise RuntimeError("Rhino failed to transform an array copy.")
+            copies.append(duplicate)
+
+    return copies
+
+
+def create_building_array(buildings, count_x=3, count_y=3, gap=1.0, seed=0):
+    """
+    Array one Brep building or a Brep group in XY with random rotations.
+
+    buildings : Rhino.Geometry.Brep or sequence of Breps forming one building
+    count_x   : int -- number of building positions along world X
+    count_y   : int -- number of building positions along world Y
+    gap       : float -- minimum clear gap between the rotated building bounds
+    seed      : int -- seed for reproducible random rotations
+
+    Each shifted building is rotated about its own center by a random angle
+    between -15 and +15 degrees. The first building remains unrotated.
+    Returns a flat list of Rhino.Geometry.Brep objects.
+    """
+    if isinstance(buildings, rg.Brep):
+        building_parts = [buildings]
+    else:
+        building_parts = list(buildings)
+    if not building_parts or any(not isinstance(part, rg.Brep) for part in building_parts):
+        raise TypeError("buildings must be a Brep or a non-empty sequence of Breps.")
+    if int(count_x) != count_x or count_x < 1:
+        raise ValueError("count_x must be a positive whole number.")
+    if int(count_y) != count_y or count_y < 1:
+        raise ValueError("count_y must be a positive whole number.")
+    if not math.isfinite(gap) or gap <= 0:
+        raise ValueError("gap must be greater than zero.")
+
+    count_x = int(count_x)
+    count_y = int(count_y)
+    bounds = [part.GetBoundingBox(True) for part in building_parts]
+    if any(not bound.IsValid for bound in bounds):
+        raise ValueError("Every building Brep must have a valid bounding box.")
+
+    min_x = min(bound.Min.X for bound in bounds)
+    min_y = min(bound.Min.Y for bound in bounds)
+    max_x = max(bound.Max.X for bound in bounds)
+    max_y = max(bound.Max.Y for bound in bounds)
+    center_x = (min_x + max_x) / 2.0
+    center_y = (min_y + max_y) / 2.0
+    half_width = (max_x - min_x) / 2.0
+    half_depth = (max_y - min_y) / 2.0
+    rotation_safe_diameter = 2.0 * math.hypot(half_width, half_depth)
+    step_x = rotation_safe_diameter + gap
+    step_y = rotation_safe_diameter + gap
+
+    rng = random.Random(seed)
+    rotation_limit = math.radians(15.0)
+    placed_parts = []
+    for row in range(count_y):
+        for column in range(count_x):
+            dx = column * step_x
+            dy = row * step_y
+            angle = 0.0 if row == 0 and column == 0 else rng.uniform(
+                -rotation_limit, rotation_limit
+            )
+            target_center = rg.Point3d(center_x + dx, center_y + dy, 0.0)
+            translation = rg.Transform.Translation(rg.Vector3d(dx, dy, 0.0))
+            rotation = rg.Transform.Rotation(angle, rg.Vector3d.ZAxis, target_center)
+
+            for part in building_parts:
+                duplicate = part.DuplicateBrep()
+                if duplicate is None:
+                    raise RuntimeError("Rhino failed to duplicate a building Brep.")
+                if (dx or dy) and not duplicate.Transform(translation):
+                    raise RuntimeError("Rhino failed to translate an array copy.")
+                if angle and not duplicate.Transform(rotation):
+                    raise RuntimeError("Rhino failed to rotate an array copy.")
+                placed_parts.append(duplicate)
+
+    return placed_parts
+
+
+def create_building_cutouts(
+    buildings,
+    cutter_count=30,
+    min_width=2.0,
+    max_width=5.0,
+    min_depth=2.0,
+    max_depth=5.0,
+    min_height=3.0,
+    max_height=10.0,
+    tolerance=0.001,
+    seed=0,
+):
+    """
+    Cut varied box-shaped voids into an existing building or building array.
+
+    The generated boxes are used only as boolean cutters and are not returned.
+    Their XY positions are sampled within the combined building bounds, and
+    they start at the lowest building elevation.
+
+    buildings    : Rhino.Geometry.Brep or sequence of Breps to cut
+    cutter_count : int -- number of box-shaped voids to generate
+    min_width    : float -- minimum cutter size along world X
+    max_width    : float -- maximum cutter size along world X
+    min_depth    : float -- minimum cutter size along world Y
+    max_depth    : float -- maximum cutter size along world Y
+    min_height   : float -- minimum cutter height
+    max_height   : float -- maximum cutter height
+    tolerance    : float -- Rhino boolean operation tolerance
+    seed         : int -- seed for reproducible cutter placement and dimensions
+
+    Returns only the building Breps remaining after the boolean differences.
+    """
+    if isinstance(buildings, rg.Brep):
+        building_parts = [buildings]
+    else:
+        building_parts = list(buildings)
+    if not building_parts or any(not isinstance(part, rg.Brep) for part in building_parts):
+        raise TypeError("buildings must be a Brep or a non-empty sequence of Breps.")
+    if int(cutter_count) != cutter_count or cutter_count < 0:
+        raise ValueError("cutter_count must be a non-negative whole number.")
+    cutter_count = int(cutter_count)
+
+    dimensions = (
+        min_width,
+        max_width,
+        min_depth,
+        max_depth,
+        min_height,
+        max_height,
+        tolerance,
+    )
+    if any(not math.isfinite(value) or value <= 0 for value in dimensions):
+        raise ValueError("Cutter dimensions and tolerance must be greater than zero.")
+    if min_width > max_width or min_depth > max_depth or min_height > max_height:
+        raise ValueError("Each minimum cutter dimension must not exceed its maximum.")
+
+    bounds = [building.GetBoundingBox(True) for building in building_parts]
+    if any(not bound.IsValid for bound in bounds):
+        raise ValueError("Every building Brep must have a valid bounding box.")
+    if cutter_count == 0:
+        return [building.DuplicateBrep() for building in building_parts]
+
+    placement_targets = [
+        (building, bound)
+        for building, bound in zip(building_parts, bounds)
+        if bound.Max.X - bound.Min.X >= min_width
+        and bound.Max.Y - bound.Min.Y >= min_depth
+    ]
+    if not placement_targets:
+        raise ValueError(
+            "At least one building footprint must fit the minimum cutter width and depth."
+        )
+
+    rng = random.Random(seed)
+    cutters = []
+    cutter_bounds = []
+    for _ in range(cutter_count):
+        _, target_bound = rng.choice(placement_targets)
+        width = rng.uniform(
+            min_width,
+            min(max_width, target_bound.Max.X - target_bound.Min.X),
+        )
+        depth = rng.uniform(
+            min_depth,
+            min(max_depth, target_bound.Max.Y - target_bound.Min.Y),
+        )
+        height = rng.uniform(min_height, max_height)
+        x = rng.uniform(target_bound.Min.X, target_bound.Max.X - width)
+        y = rng.uniform(target_bound.Min.Y, target_bound.Max.Y - depth)
+        cutter = create_box(
+            rg.Point3d(x, y, target_bound.Min.Z),
+            length=width,
+            width=depth,
+            height=height,
+        )
+        cutters.append(cutter)
+        cutter_bounds.append(cutter.GetBoundingBox(True))
+
+    cut_results = []
+    for building, building_bounds in zip(building_parts, bounds):
+        relevant_cutters = [
+            cutter
+            for cutter, cutter_bound in zip(cutters, cutter_bounds)
+            if (
+                building_bounds.Min.X < cutter_bound.Max.X - tolerance
+                and building_bounds.Max.X > cutter_bound.Min.X + tolerance
+                and building_bounds.Min.Y < cutter_bound.Max.Y - tolerance
+                and building_bounds.Max.Y > cutter_bound.Min.Y + tolerance
+                and building_bounds.Min.Z < cutter_bound.Max.Z - tolerance
+                and building_bounds.Max.Z > cutter_bound.Min.Z + tolerance
+            )
+        ]
+        if not relevant_cutters:
+            cut_results.append(building.DuplicateBrep())
+            continue
+
+        result = rg.Brep.CreateBooleanDifference(
+            [building],
+            relevant_cutters,
+            tolerance,
+        )
+        if result is None:
+            raise RuntimeError("Boolean difference failed while creating building cutouts.")
+        cut_results.extend(result)
+
+    return cut_results
+
+
+def rotate_building_block(
+    buildings,
+    axis_origin,
+    axis_direction=None,
+    angle_degrees=45.0,
+):
+    """
+    Rotate a building or group of buildings around an external axis line.
+
+    buildings      : Rhino.Geometry.Brep or sequence of Breps to rotate together
+    axis_origin    : Rhino.Geometry.Point3d -- a point on the rotation axis
+    axis_direction : Rhino.Geometry.Vector3d -- axis direction (world Z by default)
+    angle_degrees  : float -- rotation angle in degrees
+
+    Returns duplicated Rhino.Geometry.Brep objects; input Breps are unchanged.
+    """
+    if isinstance(buildings, rg.Brep):
+        building_parts = [buildings]
+    else:
+        building_parts = list(buildings)
+    if not building_parts or any(not isinstance(part, rg.Brep) for part in building_parts):
+        raise TypeError("buildings must be a Brep or a non-empty sequence of Breps.")
+    if not isinstance(axis_origin, rg.Point3d):
+        raise TypeError("axis_origin must be a Rhino.Geometry.Point3d.")
+    if axis_direction is None:
+        axis_direction = rg.Vector3d.ZAxis
+    elif not isinstance(axis_direction, rg.Vector3d):
+        raise TypeError("axis_direction must be a Rhino.Geometry.Vector3d.")
+    if not axis_direction.IsValid or axis_direction.Length <= 0:
+        raise ValueError("axis_direction must be a valid non-zero vector.")
+    if not math.isfinite(angle_degrees):
+        raise ValueError("angle_degrees must be finite.")
+
+    unit_axis = rg.Vector3d(axis_direction)
+    if not unit_axis.Unitize():
+        raise ValueError("axis_direction must be a valid non-zero vector.")
+    transform = rg.Transform.Rotation(
+        math.radians(angle_degrees),
+        unit_axis,
+        axis_origin,
+    )
+
+    rotated_buildings = []
+    for building in building_parts:
+        duplicate = building.DuplicateBrep()
+        if duplicate is None:
+            raise RuntimeError("Rhino failed to duplicate a building Brep.")
+        if not duplicate.Transform(transform):
+            raise RuntimeError("Rhino failed to rotate a building Brep.")
+        rotated_buildings.append(duplicate)
+
+    return rotated_buildings
