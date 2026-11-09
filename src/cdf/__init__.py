@@ -21,7 +21,7 @@ Describe typical classes found in project
 """
 
 from .geometry_basics import *
-from .algorithms_solution import *
+from .algorithms import *
 
 # If you add a new python file...
 

@@ -310,17 +310,9 @@ def create_crochet_pseudosphere(
 
 
 # ======================================================================
-# Tangent sphere growth (exercise)
-#
-# Fill in every line marked TODO. A `...` is a blank you replace with
-# the right value; a commented-out line is a call you complete and
-# uncomment. The module imports fine as it is, but grow_tangent_spheres
-# only works once all TODOs are done.
+# Tangent sphere growth
 # ======================================================================
 
-# ----------------------------------------------------------------------
-# STEP 1 -- Random directions + rotation
-# ----------------------------------------------------------------------
 
 def random_unit_vector():
     """Return a random direction on the unit sphere."""
@@ -341,22 +333,22 @@ def rotate_vector(v, axis, angle_rad):
     Returns:
         Rhino.Geometry.Vector3d: The rotated copy of v.
     """
-    # TODO 1.1 -- copy the input vector and the axis
-    vv = rg.Vector3d(...)
-    ax = rg.Vector3d(...)
+    # 1.1 -- copy the input vector and the axis
+    vv = rg.Vector3d(v)
+    ax = rg.Vector3d(axis)
 
-    # TODO 1.2 -- the axis must be unit length (which Vector3d method?)
-    # ax.???()
+    # 1.2 -- the axis must be unit length
+    ax.Unitize()
 
-    # TODO 1.3 -- build a Rhino rotation transform around the world origin
+    # 1.3 -- build a Rhino rotation transform around the world origin
     xform = rg.Transform.Rotation(
-        ...,                  # angle_rad
-        ...,                  # ax
+        angle_rad,
+        ax,
         rg.Point3d.Origin,
     )
 
-    # TODO 1.4 -- apply the transform to the vector (in place)
-    # vv.???(xform)
+    # 1.4 -- apply the transform to the vector (in place)
+    vv.Transform(xform)
 
     return vv
 
@@ -376,33 +368,29 @@ def random_deflect(dir_vec, angle_max):
     Returns:
         Rhino.Geometry.Vector3d: The deflected direction.
     """
-    # TODO 1.5 -- copy and unitize the incoming direction
-    d = rg.Vector3d(...)
-    # d.???()
+    # 1.5 -- copy and unitize the incoming direction
+    d = rg.Vector3d(dir_vec)
+    d.Unitize()
 
     # choose a helper vector that is not (nearly) parallel to d
     helper = rg.Vector3d(0, 0, 1)
     if abs(rg.Vector3d.Multiply(d, helper)) > 0.95:
         helper = rg.Vector3d(0, 1, 0)
 
-    # TODO 1.6 -- build a perpendicular frame U, V around d
-    U = rg.Vector3d.CrossProduct(..., ...)
-    # U.???()
-    V = rg.Vector3d.CrossProduct(..., ...)
-    # V.???()
+    # 1.6 -- build a perpendicular frame U, V around d
+    U = rg.Vector3d.CrossProduct(d, helper)
+    U.Unitize()
+    V = rg.Vector3d.CrossProduct(d, U)
+    V.Unitize()
 
     # 1.7 -- pick a random axis in the perpendicular plane
     phi = random.uniform(0.0, 2.0 * math.pi)
     axis = U * math.cos(phi) + V * math.sin(phi)
 
-    # TODO 1.8 -- rotate by a random angle up to angle_max
-    ang = random.uniform(0.0, ...)
+    # 1.8 -- rotate by a random angle up to angle_max
+    ang = random.uniform(0.0, angle_max)
     return rotate_vector(d, axis, ang)
 
-
-# ----------------------------------------------------------------------
-# STEP 2 -- Spatial hash (fast collision checks)
-# ----------------------------------------------------------------------
 
 def cell_key(pt, cs):
     """Map a 3D point to a grid cell index (ix, iy, iz) for cell size cs."""
@@ -446,8 +434,8 @@ def can_place_tangent(center, r_child, grid, cs, eps=1e-6):
             continue
 
         for (c2, r2) in grid[nk]:
-            # TODO 2.1 -- fill in the overlap rule
-            if center.DistanceTo(c2) < (... + ... - eps):
+            # 2.1 -- overlap rule
+            if center.DistanceTo(c2) < (r_child + r2 - eps):
                 return False
 
     return True
@@ -456,13 +444,9 @@ def can_place_tangent(center, r_child, grid, cs, eps=1e-6):
 def add_to_grid(center, radius, grid, cs):
     """Store (center, radius) in its grid cell for fast lookup later."""
     key = cell_key(center, cs)
-    # TODO 2.3 -- what do we store for each sphere?
-    grid.setdefault(key, []).append((..., ...))
+    # 2.3 -- store center and radius
+    grid.setdefault(key, []).append((center, radius))
 
-
-# ----------------------------------------------------------------------
-# STEP 3 + 4 -- Growth
-# ----------------------------------------------------------------------
 
 def grow_tangent_spheres(
     seed_pt=None,
@@ -512,16 +496,19 @@ def grow_tangent_spheres(
 
     # STEP 3 -- initial direction: use seed_dir if given, otherwise random
     if seed_dir:
-        # TODO 3.1 -- copy and unitize seed_dir
-        d0 = rg.Vector3d(...)
-        # d0.???()
+        # 3.1 -- copy and unitize seed_dir
+        d0 = rg.Vector3d(seed_dir)
+        d0.Unitize()
     else:
         d0 = random_unit_vector()
 
     spheres, lines = [], []
 
-    # TODO 4.1 -- choose the cell size for the spatial hash
-    cell_size = max(... * seed_radius, ... * min_radius)
+    # 4.1 -- cell size for the spatial hash. Two spheres can only collide
+    # when their centers are closer than the sum of their radii, which is
+    # at most 2 * seed_radius. With cells at least that big, checking the
+    # 3x3x3 neighbouring cells is enough to find every possible collision.
+    cell_size = max(2.0 * seed_radius, 2.0 * min_radius)
 
     grid = {}
 
@@ -544,21 +531,21 @@ def grow_tangent_spheres(
             if r_child < min_radius:
                 continue
 
-            # TODO 4.5 -- branching: usually 1 child, sometimes 2
-            n_children = 1 + (1 if random.random() < ... else 0)
+            # 4.5 -- branching: usually 1 child, sometimes 2
+            n_children = 1 + (1 if random.random() < branch_chance else 0)
 
             for c in range(n_children):
 
-                # TODO 4.6 -- how many attempts to find a free placement?
-                for t in range(...):
+                # 4.6 -- try up to 20 directions to find a free placement
+                for t in range(20):
 
                     # new direction = deflected parent direction
                     d_child = random_deflect(d, angle_max)
                     d_child.Unitize()
 
-                    # TODO 4.7 -- tangency rule:
+                    # 4.7 -- tangency rule:
                     # distance between centers = r_parent + r_child
-                    step = ... + ...
+                    step = r_parent + r_child
                     new_pt = pt + d_child * step
 
                     # 4.8 -- accept only if nothing overlaps
@@ -584,4 +571,3 @@ def grow_tangent_spheres(
     tip_points = [pt for (pt, d, r) in tips]
 
     return spheres, lines, tip_points
-
