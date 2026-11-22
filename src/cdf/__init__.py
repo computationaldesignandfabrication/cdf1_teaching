@@ -22,6 +22,7 @@ Describe typical classes found in project
 
 from .geometry_basics import *
 from .algorithms import *
+from .material_processes_0 import *
 
 # If you add a new python file...
 
